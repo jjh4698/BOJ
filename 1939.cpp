@@ -54,15 +54,16 @@ int main() {
 		int x =q.front().first;
 		int w =q.front().second;
 		check[x] = true;
-		q.pop();
+	
 		if (x == f2)
 		{
 			if (ret < w)
 				ret = w;
 			check[f2] = false; 
-			w = INF;
+			q.pop();
+			continue;
 		}
-
+		q.pop();	
 		for (int i = 0; i < v[x].size(); i++)
 		{
 			if (check[v[x][i].first] == false)
