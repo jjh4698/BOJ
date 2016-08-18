@@ -2,33 +2,41 @@
 #include <stdio.h>
 #include <cstring>
 #include <algorithm>
-#include <map>
 #include <vector>
-#include <string>
 #define INF 987654321
 using namespace std;
 
-map<string, bool> m;
-vector<string> ans;
-char str[21];
+int get_len(int number)
+{
+	int ret = 1;
+	while (number >= 10)
+	{
+		number /= 10;
+		ret++;
+	}
+	return ret;
+}
+
+int make_ten(int zari)
+{
+	return pow(10, zari - 1);
+}
+
 int main()
 {
-	freopen("input.txt", "r", stdin);
-	int N, M;
-	scanf("%d%d", &N, &M);
-	for (int i = 0; i < N; i++)
+	int N, ans = 0, in;
+
+	scanf("%d", &in);
+	N = in;
+	while (N >= 10)
 	{
-		scanf("%s", str);
-		m[str] = true;
+		int zari = get_len(N);
+		ans += (N - make_ten(zari) + 1)*zari;
+		N = make_ten(zari) - 1;
 	}
-	for (int i = 0; i < M; i++)
-	{
-		scanf("%s", str);
-		if (m.find(str) != m.end())
-			ans.push_back(str);
-	}
-	sort(ans.begin(), ans.end());
-	printf("%d\n", ans.size());
-	for (int i = 0; i < ans.size(); i++)
-		cout << ans[i] << endl;
+	if (in >= 9)
+		ans += 9;
+	else
+		ans += in;
+	printf("%d", ans);
 }
