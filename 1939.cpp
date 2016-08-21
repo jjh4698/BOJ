@@ -1,77 +1,47 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
-#include <cmath>
-#include <algorithm>
+#define _USE_MATH_DEFINES
 #include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+#include <cstring>
 #include <vector>
 #include <queue>
-#define INF 1000000001
+#define INF 987654321
 using namespace std;
 
 int N, M;
-bool check[10001];
+int A, B, C,S,E;
+vector<vector<pair<int, int > > > v;
+queue<pair<int, int> > q;
 int dp[10001];
-int f1, f2;
-vector<vector<pair<int,int> > > v;
-
-queue<pair<int,int > > q;
-
-int has(int x,int y)
+int main()
 {
-	for (int i = 0; i < v[x].size(); i++)
-	{
-		if (v[x][i].first == y)
-			return i;
-	}
-	return -1;
-}
-
-int main() {
 	freopen("input.txt", "r", stdin);
-	int x, y,z,ret=0;
-	int temp;
-	scanf("%d %d", &N, &M);
+	scanf("%d%d", &N, &M);
 	v.resize(N + 1);
-	for (int i = 0; i < M; i++)
-	{
-		scanf("%d %d %d", &x, &y, &z);
-		if ((temp=has(x, y))!=-1){
-			v[x][temp].second = max(v[x][temp].second, z);
-			temp = has(y, x);
-			v[y][temp].second = max(v[y][temp].second, z);
-		}
-		else{
-		v[x].push_back(make_pair(y,z));
-		v[y].push_back(make_pair(x, z));
-		}
+	for (int i = 0; i < N + 1; i++)
+		dp[i] = 0;
+	
+	for (int i = 0; i < M; i++){
+		scanf("%d%d%d", &A, &B, &C);
+		v[A].push_back(make_pair(B, C));
+		v[B].push_back(make_pair(A, C));
 	}
-	scanf("%d %d", &f1, &f2);
-	q.push(make_pair(f1,INF));
-	check[f1] = true;
-
+	scanf("%d%d", &S, &E);
+	q.push(make_pair(S, INF));
 	while (!q.empty())
 	{
-		int x =q.front().first;
-		int w =q.front().second;
-		check[x] = true;
-	
-		if (x == f2)
+		int p = q.front().first;
+		int cnt = q.front().second;
+		q.pop();
+		for (int i = 0; i < v[p].size(); i++)
 		{
-			if (ret < w)
-				ret = w;
-			check[f2] = false; 
-			q.pop();
-			continue;
-		}
-		q.pop();	
-		for (int i = 0; i < v[x].size(); i++)
-		{
-			if (check[v[x][i].first] == false)
+			if (dp[v[p][i].first] < min(v[p][i].second, cnt))
 			{
-				q.push(make_pair(v[x][i].first, min(w,v[x][i].second)));
+				dp[v[p][i].first] =	 min(v[p][i].second, cnt);
+				q.push(make_pair(v[p][i].first, min(v[p][i].second, cnt)));
 			}
 		}
 	}
-	printf("%d", ret);
-
+	printf("%d", dp[E]);
 }
